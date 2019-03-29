@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	</head>
+
+	<body>
+		<div>
+			<span class="title">100以内减法</span>
+		</div>
+		<div class="moudle0 moudle00">
+			<span style="padding: 25px;">
+				<button class='setQuestion'></button>
+			</span>
+			<div>
+				<button class="index" style="margin-top: 25px;">首页</button>
+			</div>
+		</div>
+
+		<br>
+		<div class='moudle1' style=" display: block;">
+			<div class="right">
+				<table style="display: none;">
+					<tr>
+						<td>动态生成题库</td>
+						<td><input id="Num" type="text" value='20' class="input" size="10" name="Num" />题</td>
+					</tr>
+				</table>
+				</br>
+				<inpu name="" type="button" value="生成" class="buttton" />
+				</br>
+				</br>
+				<div id="div1" style="display: none" mce_style="display: none">
+					<div id="table1"></div>
+				</div>
+				<div id="errmsg1" class="formmsg"></div>
+			</div>
+
+		</div>
+		<div class="moudle2" id="pjans" style="display: none">
+			<span style="padding: 25px;">
+				<button class='pjbtn' >
+					评卷
+				</button>				
+			</span>
+			<span><button class='getAnswer' >
+					答案
+				</button></span>
+		</div>
+	</body>
+	<script src="../js/jquery.js">
+	</script>
+	<script>
+		$(function() { // 初始化内容
+			$('.setQuestion').html("出题");
+
+		});
+
+		$(".setQuestion").click(function() {
+			$('.moudle0').removeClass("moudle00");
+			table(); //初始化出题方法
+			for(var i = 1; i < 21; i++) {
+				var firstNum = 0;
+				$.each($('.number' + i + ''), function() {
+					if(firstNum == 0) {
+						$(this).html(Math.ceil(Math.random() * 100));
+						firstNum = $(this).html();
+					} else {
+						$(this).html(RandomNumBoth(0, firstNum));
+					}
+				});
+			}
+			$(this).html("重新出题");
+		});
+
+		//取范围之内的随机数
+		function RandomNumBoth(Min, Max) {
+			var Range = Max - Min;
+			var Rand = Math.random();
+			var num = Min + Math.round(Rand * Range); //四舍五入
+			return num;
+		}
+
+		//回到首页
+		$(".index").click(function() {
+			location.href = '../index.html';
+		})
+
+		function table() {
+			if(document.getElementById("Num").value == "" || document.getElementById("Num").value.search("^[0-9]*$") == -1) {
+				document.getElementById("errmsg1").style.display = "block"; //判断payNum是否为空或不是数字    提示错误
+				document.getElementById("errmsg1").innerHTML = "提示信息：行数为空或不是数字！";
+			} else {
+				document.getElementById("errmsg1").style.display = "none"; //隐藏提示信息
+				var Num = parseInt(document.getElementById("Num").value); //获取分期数           
+				var flag = true;
+				var data = "";
+				data += " <table >";
+				data += " <tr>" +
+					"<td style='color: #715e5e;'>序号</td>" +
+					"<td >数字</td>" +
+					"<td >符号</td>" +
+					"<td >数字</td>" +
+					"<td>答案</td>" +
+					"<td>结果</td>" +
+					"</tr>";
+				for(var i = 1; i <= Num; i++) {
+					data += "<tr>";
+					data += "<td style='color: #715e5e;'><span><" + i + "></span></td>";
+					data += "<td><span name='ColdDay" + i + "' type='text' class='input number" + i + " ' disabled='true'></td>";
+					data += "<td>" + "-" + "</td>";
+					data += "<td><span name='ColdCureMethod" + i + "' type='text' class='input number" + i + "' disabled='true'></td>";
+					data += "<td><input style='width:55px;'  name='ColdCureMethod" + i + "' type='text' class='answer ans" + i + "'></td>";
+					data += "<td><img src='../img/question-mark-16.ico' class='err" + i + "'></img></td>";
+					data += "</tr>";
+				}
+
+				data += "</table>";
+				document.getElementById("div1").style.display = "block";
+				document.getElementById("pjans").style.display = "block";
+				document.getElementById("table1").innerHTML = data;
+			}
+		}
+		$(".pjbtn").click(function() {
+			$(".answer").each(function() {
+				if($(this).val() == "" || $(this).val() == undefined || $(this).val() == null) {
+					//alert("请完成所有的题再提交！");
+					return false;
+				}
+			})
+			//判断20道加法题对错
+
+			//记录打错的题
+			var errAns = 0;
+			for(var i = 1; i < 21; i++) {
+				var result = '';
+				var time = '';
+				$('.number' + i + '').each(function() {
+					if(time == 0) {
+						result = (result - 0) + ($(this).html() - 0);
+						time++;
+					} else {
+						result = (result - ($(this).html()));
+					}
+				});
+				console.log(result);
+				console.log($('.ans' + i + '').val());
+				if(($('.ans' + i + '').val()).trim() == "" || ($('.ans' + i + '').val()) != result) {
+					errAns++;
+					console.log("错误")
+					//$(this).parent("td").next("td").children(".span1").html("错");
+					$('.ans' + i + '').css("color", "red");
+					$('.ans' + i + '').parent().next().children().remove();
+					$('.ans' + i + '').parent().next().append("<img src='../img/x-mark-16.ico' class='err" + i + "'></img>");
+				} else {
+					console.log("正确")
+					//$(this).parent("td").next("td").children(".span1").html("对");
+					$('.ans' + i + '').css("color", "black");
+					$('.ans' + i + '').parent().next().children().remove();
+					$('.ans' + i + '').parent().next().append("<img src='../img/checkmark-16.ico' class='err" + i + "'></img>");
+				}
+			}
+			if(errAns != 0) {
+				alert('评卷成功,你答错了' + errAns + '道题,继续努力')
+			} else {
+				alert('评卷成功,恭喜你全部答对')
+			}
+		})
+		//获取答案W
+		$(".getAnswer").click(function() {
+			for(var i = 1; i < 21; i++) {
+				var result = '';
+				$.each($('.err' + i + ''), function() {
+					var strSrc = $(this)[0].src;
+					var str = strSrc.substr(strSrc.lastIndexOf("/"), strSrc.length);
+					if(str == '/x-mark-16.ico') {
+						var time = 0;
+						$('.number' + i + '').each(function() {
+							if(time == 0) {
+								result = (result - 0) + ($(this).html() - 0);
+								time++;
+							} else {
+								result = (result - 0) - ($(this).html() - 0);
+							}
+
+						});
+						$(".err" + i + "").parent().append("<span>" + result + "</span>");
+						$(".err" + i + "").remove();
+					};
+				});
+			}
+		})
+	</script>
+
+</html>

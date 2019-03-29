@@ -1,0 +1,83 @@
+.title {
+	border: 2px solid #000;
+	font-size: 25px;
+	text-align: center;
+	;
+}
+
+.moudle0 {
+	text-align: center;
+	padding: 25px;
+	;
+}
+
+.moudle00 {
+	margin-top: 155px;
+}
+
+.moudle1 {
+	text-align: center;
+}
+
+.moudle2 {
+	text-align: center;
+	padding-top: 25px;
+}
+
+.setQuestion {
+	border: 2px solid #000;
+	font-size: 50px;
+	;
+}
+
+.index {
+	border: 2px solid #000;
+	font-size: 50px;
+	;
+}
+
+.right {
+	margin: 0% 10%;
+	/*width: 600px;*/
+	margin-top: -60px;
+}
+
+.right table {
+	background: white;
+	width: 100%;
+	border: 1px solid #499B33;
+	height: 1500px;
+}
+
+.right td {
+	background: blue;
+	text-align: center;
+	padding: 2px;
+	border: 1px solid #499B33;
+	width: 15%;
+}
+
+.right td {
+	background: #8FBC8F;
+}
+
+.item {
+	text-align: center;
+	width: 100px;
+}
+
+.assigned {
+	border: 1px solid #BC2A4D;
+}
+
+.pjbtn {
+	border: 2px solid #000;
+	font-size: 50px;
+	;
+}
+
+.getAnswer {
+	border: 2px solid #000;
+	font-size: 50px;
+	;
+}
