@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+
+		<title></title>
+	</head>
+	<style>
+		.moudle0 {
+			text-align: center;
+			padding: 25px;
+			;
+		}
+		
+		.moudle1 {
+			text-align: center;
+		}
+		
+		.moudle2 {
+			text-align: center;
+			padding-top: 25px;
+		}
+		
+		.setQuestion {
+			border: 2px solid #000;
+			font-size: 50px;
+			;
+		}
+		
+		.index {
+			border: 2px solid #000;
+			font-size: 50px;
+			;
+		}
+		
+		.right {
+			margin: 0% 10%;
+			/*width: 600px;*/
+		}
+		
+		.right table {
+			background: white;
+			width: 100%;
+			border: 1px solid #499B33;
+			height: 1500px;
+		}
+		
+		.right td {
+			background: blue;
+			text-align: center;
+			padding: 2px;
+			border: 1px solid #499B33;
+			width: 20%;
+		}
+		
+		.right td {
+			background: #8FBC8F;
+		}
+		
+		.item {
+			text-align: center;
+			width: 100px;
+		}
+		
+		.assigned {
+			border: 1px solid #BC2A4D;
+		}
+		
+		.pjbtn {
+			border: 2px solid #000;
+			font-size: 50px;
+			;
+		}
+		
+		.getAnswer {
+			border: 2px solid #000;
+			font-size: 50px;
+			;
+		}
+	</style>
+
+	<body>
+		<div class="moudle0">
+			<span style="padding: 25px;">
+				<button class='setQuestion'></button>
+			</span>
+			<span>
+				<button class="index">首页</button>
+			</span>
+		</div>
+
+		<br>
+		<div class='moudle1' style=" display: block;">
+			<div class="right">
+				<table style="display: none;">
+					<tr>
+						<td>动态生成题库</td>
+						<td><input id="Num" type="text" value='20' class="input" size="10" name="Num" />题</td>
+					</tr>
+				</table>
+				</br>
+				<inpu name="" type="button" value="生成" class="buttton" />
+				</br>
+				</br>
+				<div id="div1" style="display: none" mce_style="display: none">
+					<div id="table1"></div>
+				</div>
+				<div id="errmsg1" class="formmsg"></div>
+			</div>
+			<div class="moudle2">
+				<span style="padding: 25px;">
+				<button class='pjbtn' >
+					评卷
+				</button>				
+			</span>
+				<span><button class='getAnswer' >
+					答案
+				</button></span>
+			</div>
+		</div>
+	</body>
+	<script src="../js/jquery.js">
+	</script>
+	<script>
+		$(function() { // 初始化内容
+			$('.setQuestion').html("出题");
+
+		});
+
+		$(".setQuestion").click(function() {
+			table(); //初始化出题方法
+			for(var i = 1; i < 21; i++) {
+				$.each($('.number' + i + ''), function() {
+					$(this).html(Math.ceil(Math.random() * 9));
+				});
+			}
+			$(this).html("重新出题");
+		});
+		//回到首页
+		$(".index").click(function() {
+			location.href = '../index.html';
+		})
+
+		function table() {
+			if(document.getElementById("Num").value == "" || document.getElementById("Num").value.search("^[0-9]*$") == -1) {
+				document.getElementById("errmsg1").style.display = "block"; //判断payNum是否为空或不是数字    提示错误
+				document.getElementById("errmsg1").innerHTML = "提示信息：行数为空或不是数字！";
+			} else {
+				document.getElementById("errmsg1").style.display = "none"; //隐藏提示信息
+				var Num = parseInt(document.getElementById("Num").value); //获取分期数           
+				var flag = true;
+				var data = "";
+				data += " <table >";
+				data += " <tr>" +
+					"<td >数字</td>" +
+					"<td >运算符</td>" +
+					"<td >数字</td>" +
+					"<td>答案</td>" +
+					"<td>结果</td>" +
+					"</tr>";
+				for(var i = 1; i <= Num; i++) {
+					data += "<tr >";
+					data += "<td><span name='ColdDay" + i + "' type='text' class='input number" + i + " ' disabled='true'></td>";
+					data += "<td>" + "+" + "</td>";
+					data += "<td><span name='ColdCureMethod" + i + "' type='text' class='input number" + i + "' disabled='true'></td>";
+					data += "<td><input  name='ColdCureMethod" + i + "' type='text' class='answer ans" + i + "'></td>";
+					data += "<td><span class='err" + i + "'>?</span></td>";
+					data += "</tr>";
+				}
+
+				data += "</table>";
+				document.getElementById("div1").style.display = "block";
+				document.getElementById("table1").innerHTML = data;
+			}
+		}
+		$(".pjbtn").click(function() {
+			$(".answer").each(function() {
+				if($(this).val() == "" || $(this).val() == undefined || $(this).val() == null) {
+					alert("请完成所有的题再提交！");
+					return false;
+				}
+			})
+			//判断20道加法题对错
+			for(var i = 1; i < 21; i++) {
+				var result = '';
+				$('.number' + i + '').each(function() {
+					result = (result - 0) + ($(this).html() - 0);
+				});
+
+				if(($('.ans' + i + '').val() - 0) != result) {
+					console.log("不等于")
+					//$(this).parent("td").next("td").children(".span1").html("错");
+					$('.ans' + i + '').css("color", "red");
+					$('.err' + i + '').html("错");
+				} else {
+					console.log("等于")
+					//$(this).parent("td").next("td").children(".span1").html("对");
+					$('.ans' + i + '').css("color", "black");
+					$('.err' + i + '').html("对");
+				}
+			}
+		})
+		//获取答案
+		$(".getAnswer").click(function() {
+			for(var i = 1; i < 21; i++) {
+				var result = '';
+				$.each($('.err' + i + ''), function() {
+					if($(this).html() == '错') {
+						$('.number' + i + '').each(function() {
+							result = (result - 0) + ($(this).html() - 0);
+						});
+						$(".err" + i + "").html(result);
+					};
+				});
+			}
+		})
+	</script>
+
+</html>

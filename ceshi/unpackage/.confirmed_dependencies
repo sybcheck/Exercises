@@ -1,0 +1,14 @@
+{
+  "index.html": {
+    "href": "index.html",
+    "priority": 0,
+    "refer": [
+      "html/a.html"
+    ]
+  },
+  "html/a.html": {
+    "refer": [
+      "index.html"
+    ]
+  }
+}
